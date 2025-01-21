@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TKM
@@ -20,6 +21,7 @@ namespace TKM
         public MCMovementData MovementData;
         public MCJumpData JumpData;
         public Vector2 RawDirection { get; private set; }
+        public MCSharedMovementData SharedMovementData { get; private set; }
         #endregion
 
         #region State
@@ -32,12 +34,16 @@ namespace TKM
         void OnEnable()
         {
             InputReader.MoveEvent += MoveMC;
+            InputReader.JumpStart += JumpStartMC;
+            InputReader.JumpCancel += JumpCancelMC;
         }
+
 
         void OnDisable()
         {
             InputReader.MoveEvent -= MoveMC;
-
+            InputReader.JumpStart -= JumpStartMC;
+            InputReader.JumpCancel -= JumpCancelMC;
         }
 
         void Initialize()
@@ -45,6 +51,8 @@ namespace TKM
             Rigidbody = GetComponent<Rigidbody2D>();
             Animator = GetComponent<Animator>();
             SpriteRenderer = GetComponent<SpriteRenderer>();
+
+            SharedMovementData = new MCSharedMovementData();
 
             MCIdlingState = new MCIdlingState(this);
             MCWalkingState = new MCWalkingState(this);
@@ -68,5 +76,17 @@ namespace TKM
             Vector3 vertical = transform.forward * RawDirection.y;
             return horizontal + vertical;
         }
+
+        private void JumpStartMC()
+        {
+            SharedMovementData.DesiredJump = true;
+            SharedMovementData.PressingJump = true;
+        }
+
+        private void JumpCancelMC()
+        {
+            SharedMovementData.PressingJump = false;
+        }
+
     }
 }

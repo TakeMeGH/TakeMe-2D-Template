@@ -8,7 +8,8 @@ namespace TKM
     public class InputReader : ScriptableObject, MCInput.IGameplayActions, MCInput.IUIActions
     {
         public Action<Vector2> MoveEvent;
-        public Action JumpEvent;
+        public Action JumpStart;
+        public Action JumpCancel;
 
 
         MCInput _MCInput;
@@ -52,9 +53,13 @@ namespace TKM
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.phase == InputActionPhase.Performed)
+            if (context.phase == InputActionPhase.Started)
             {
-                JumpEvent?.Invoke();
+                JumpStart?.Invoke();
+            }
+            else if (context.phase == InputActionPhase.Canceled)
+            {
+                JumpCancel?.Invoke();
             }
         }
     }

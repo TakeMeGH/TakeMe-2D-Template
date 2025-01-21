@@ -38,7 +38,7 @@ namespace TKM
             CheckToIdle();
             //Calculate's the character's desired velocity - which is the direction you are facing, multiplied by the character's maximum speed
             //Friction is not used in this game
-            _desiredVelocity = new Vector2(_directionX, 0f) * Mathf.Max(_MCController.MovementData.MaxSpeed - _MCController.MovementData.Friction, 0f);
+            _desiredVelocity = new Vector2(_MCController.SharedMovementData.DirectionX, 0f) * Mathf.Max(_MCController.MovementData.MaxSpeed - _MCController.MovementData.Friction, 0f);
 
         }
 
@@ -78,10 +78,10 @@ namespace TKM
             _deceleration = _onGround ? _MCController.MovementData.MaxDecceleration : _MCController.MovementData.MaxAirDeceleration;
             _turnSpeed = _onGround ? _MCController.MovementData.MaxTurnSpeed : _MCController.MovementData.MaxAirTurnSpeed;
 
-            if (_pressingKey)
+            if (_MCController.SharedMovementData.PressingMove)
             {
                 //If the sign (i.e. positive or negative) of our input direction doesn't match our movement, it means we're turning around and so should use the turn speed stat.
-                if (Mathf.Sign(_directionX) != Mathf.Sign(_velocity.x))
+                if (Mathf.Sign(_MCController.SharedMovementData.DirectionX) != Mathf.Sign(_velocity.x))
                 {
                     _maxSpeedChange = _turnSpeed * Time.deltaTime;
                 }
@@ -114,7 +114,7 @@ namespace TKM
 
         void CheckToIdle()
         {
-            if (_MCController.Rigidbody.linearVelocity.x == 0f && !_pressingKey)
+            if (_MCController.Rigidbody.linearVelocity.x == 0f && !_MCController.SharedMovementData.PressingMove)
             {
                 _MCController.SwitchState(_MCController.MCIdlingState);
             }
