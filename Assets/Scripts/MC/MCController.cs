@@ -13,20 +13,18 @@ namespace TKM
         public Rigidbody2D Rigidbody { get; private set; }
         public Animator Animator { get; private set; }
         public SpriteRenderer SpriteRenderer { get; private set; }
+        public MCMovement MCMovement;
+        public MCJump MCJump;
+
         #endregion
 
         #region SharedData
         [field: Header("Read Only")]
-        public MCMovementData MovementData;
-        public MCJumpData JumpData;
         public Vector2 RawDirection { get; private set; }
         #endregion
 
         #region State
-        public MCIdlingState MCIdlingState { get; private set; }
-        public MCWalkingState MCWalkingState { get; private set; }
-        public MCJumpingState MCJumpingState { get; private set; }
-        public MCFallingState MCFallingState { get; private set; }
+        public MCMovementState MCMovementState { get; private set; }
         #endregion
 
         void OnEnable()
@@ -46,15 +44,12 @@ namespace TKM
             Animator = GetComponent<Animator>();
             SpriteRenderer = GetComponent<SpriteRenderer>();
 
-            MCIdlingState = new MCIdlingState(this);
-            MCWalkingState = new MCWalkingState(this);
-            MCJumpingState = new MCJumpingState(this);
-            MCFallingState = new MCFallingState(this);
+            MCMovementState = new MCMovementState(this);
         }
         void Start()
         {
             Initialize();
-            SwitchState(MCIdlingState);
+            SwitchState(MCMovementState);
         }
 
         void MoveMC(Vector2 pos)

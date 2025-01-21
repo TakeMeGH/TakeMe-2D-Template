@@ -12,15 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa4dddcdaafb4724bbe822caa0d989c9, type: 3}
   m_Name: MCJumpData
   m_EditorClassIdentifier: 
-  body: {fileID: 0}
-  velocity: {x: 0, y: 0}
-  jumpHeight: 5.5
-  timeToJumpApex: 0.2
-  upwardMovementMultiplier: 1
-  downwardMovementMultiplier: 6.17
-  maxAirJumps: 0
-  variablejumpHeight: 0
-  jumpCutOff: 1
-  speedLimit: 0
-  coyoteTime: 0.15
-  jumpBuffer: 0.15
+  JumpHeight: 7.3
+  TimeToJumpApex: 0
+  UpwardMovementMultiplier: 1
+  DownwardMovementMultiplier: 6.17
+  MaxAirJumps: 0
+  VariablejumpHeight: 0
+  JumpCutOff: 0
+  SpeedLimit: 0
+  CoyoteTime: 0.15
+  JumpBuffer: 0.15
