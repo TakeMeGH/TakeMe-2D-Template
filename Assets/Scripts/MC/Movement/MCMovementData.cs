@@ -18,7 +18,7 @@ namespace TKM
         [SerializeField, Range(0f, 100f)][Tooltip("How fast to reach max speed when in mid-air")] public float maxAirAcceleration;
         [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop in mid-air when no direction is used")] public float maxAirDeceleration;
         [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop when changing direction when in mid-air")] public float maxAirTurnSpeed = 80f;
-        [SerializeField][Tooltip("Friction to apply against movement on stick")] private float friction;
+        [SerializeField][Tooltip("Friction to apply against movement on stick")] public float friction;
 
         [Header("Options")]
         [Tooltip("When false, the charcter will skip acceleration and deceleration and instantly move and stop")] public bool useAcceleration;

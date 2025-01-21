@@ -8,6 +8,8 @@ namespace TKM
     public class InputReader : ScriptableObject, MCInput.IGameplayActions, MCInput.IUIActions
     {
         public Action<Vector2> MoveEvent;
+        public Action JumpEvent;
+
 
         MCInput _MCInput;
         void OnEnable()
@@ -46,6 +48,14 @@ namespace TKM
             _MCInput.UI.Enable();
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                JumpEvent?.Invoke();
+            }
         }
     }
 }

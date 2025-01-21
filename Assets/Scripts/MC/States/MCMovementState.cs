@@ -1,3 +1,5 @@
+using System;
+
 namespace TKM
 {
     public class MCMovementState : IState
@@ -8,22 +10,23 @@ namespace TKM
             this._MCController = _MCController;
         }
 
-        public void Enter()
+        public virtual void Enter()
         {
 
         }
 
-        public void Exit()
+        public virtual void Exit()
         {
 
         }
 
-        public void PhysicsUpdate()
+        public virtual void PhysicsUpdate()
         {
         }
 
-        public void Update()
+        public virtual void Update()
         {
+            _MCController.Animator.SetFloat("Speed", Math.Abs(_MCController.Rigidbody.linearVelocityX));
         }
     }
 }

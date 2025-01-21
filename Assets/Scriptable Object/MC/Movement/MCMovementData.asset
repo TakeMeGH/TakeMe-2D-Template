@@ -20,5 +20,5 @@ MonoBehaviour:
   maxAirDeceleration: 0
   maxAirTurnSpeed: 80
   friction: 0
-  useAcceleration: 0
+  useAcceleration: 1
   itsTheIntro: 1
