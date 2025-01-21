@@ -10,6 +10,7 @@ namespace TKM
 
         public override void Enter()
         {
+            _MCController.Animator.SetTrigger("Grounded");
             _MCController.InputReader.JumpEvent += OnJump;
         }
 
