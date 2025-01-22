@@ -117,11 +117,15 @@ namespace TKM
 
         private void calculateGravity()
         {
+            if (onGround)
+            {
+                _MCController.Animator.SetTrigger("Grounded");
+            }
             //We change the character's gravity based on her Y direction
-
             //If Kit is going up...
             if (_MCController.Rigidbody.linearVelocity.y > 0.01f)
             {
+                _MCController.Animator.SetTrigger("Jump");
                 if (onGround)
                 {
                     //Don't change it if Kit is stood on something (such as a moving platform)
@@ -153,15 +157,15 @@ namespace TKM
             //Else if going down...
             else if (_MCController.Rigidbody.linearVelocity.y < -0.01f)
             {
-
-                if (onGround)
                 //Don't change it if Kit is stood on something (such as a moving platform)
+                if (onGround)
                 {
                     gravMultiplier = defaultGravityScale;
                 }
                 else
                 {
                     //Otherwise, apply the downward gravity multiplier as Kit comes back to Earth
+                    _MCController.Animator.SetTrigger("Fall");
                     gravMultiplier = _jumpData.downwardMovementMultiplier;
                 }
 

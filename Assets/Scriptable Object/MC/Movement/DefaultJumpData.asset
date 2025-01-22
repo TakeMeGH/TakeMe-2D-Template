@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77831f89117846e44be4ebcfb7a34b12, type: 3}
   m_Name: DefaultJumpData
   m_EditorClassIdentifier: 
-  jumpHeight: 7.3
-  timeToJumpApex: 0
+  jumpHeight: 5.5
+  timeToJumpApex: 0.45
   upwardMovementMultiplier: 1
-  downwardMovementMultiplier: 6.17
-  maxAirJumps: 0
+  downwardMovementMultiplier: 10
+  maxAirJumps: 1
   variablejumpHeight: 0
-  jumpCutOff: 0
+  jumpCutOff: 1
   speedLimit: 0
   coyoteTime: 0.15
   jumpBuffer: 0.15

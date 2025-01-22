@@ -175,8 +175,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1.84, y: 2.55}
+  m_Offset: {x: 0, y: 0.044644356}
+  m_Size: {x: 1.84, y: 2.460711}
   m_Direction: 0
 --- !u!50 &3001432470366516912
 Rigidbody2D:
@@ -215,7 +215,7 @@ Animator:
   m_GameObject: {fileID: 8692528765959736458}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1ed4fb14038075a44a450c9aafc74a68, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -241,5 +241,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputReader: {fileID: 11400000, guid: c391a0f65ad81864a836d1b8fc2686d9, type: 2}
   GroundDetector: {fileID: 6878186277064464458}
-  MovementData: {fileID: 11400000, guid: a0cfc2d2a2b84a44bad9f66fc5c0ec15, type: 2}
-  JumpData: {fileID: 11400000, guid: 8399f3e09847146468236672235243ef, type: 2}
+  MovementData: {fileID: 11400000, guid: f083d5c5a49626140a70a3195f8c7acf, type: 2}
+  JumpData: {fileID: 11400000, guid: 13c6d0d5d58894b44a321cf02cf32a1f, type: 2}
