@@ -13,18 +13,20 @@ namespace TKM
         public Rigidbody2D Rigidbody { get; private set; }
         public Animator Animator { get; private set; }
         public SpriteRenderer SpriteRenderer { get; private set; }
-        public MCMovement MCMovement;
-        public MCJump MCJump;
 
         #endregion
 
         #region SharedData
         [field: Header("Read Only")]
         public Vector2 RawDirection { get; private set; }
+        public MCMovementData MovementData;
+        public MCJumpData JumpData;
         #endregion
 
         #region State
         public MCMovementState MCMovementState { get; private set; }
+        public MCMovement MCMovement { get; private set; }
+        public MCJump MCJump { get; private set; }
         #endregion
 
         void OnEnable()
@@ -45,6 +47,8 @@ namespace TKM
             SpriteRenderer = GetComponent<SpriteRenderer>();
 
             MCMovementState = new MCMovementState(this);
+            MCMovement = new MCMovement(this, MovementData);
+            MCJump = new MCJump(this, JumpData);
         }
         void Start()
         {

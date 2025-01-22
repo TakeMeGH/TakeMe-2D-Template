@@ -2,22 +2,11 @@ using UnityEngine;
 
 namespace TKM
 {
-    public class MCMovement : MonoBehaviour, IState
+    public class MCMovement : IState
     {
-        [Header("Movement Stats")]
-        [SerializeField] MCController _MCController;
-        [SerializeField, Range(0f, 20f)][Tooltip("Maximum movement speed")] public float maxSpeed = 10f;
-        [SerializeField, Range(0f, 100f)][Tooltip("How fast to reach max speed")] public float maxAcceleration = 52f;
-        [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop after letting go")] public float maxDecceleration = 52f;
-        [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop when changing direction")] public float maxTurnSpeed = 80f;
-        [SerializeField, Range(0f, 100f)][Tooltip("How fast to reach max speed when in mid-air")] public float maxAirAcceleration;
-        [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop in mid-air when no direction is used")] public float maxAirDeceleration;
-        [SerializeField, Range(0f, 100f)][Tooltip("How fast to stop when changing direction when in mid-air")] public float maxAirTurnSpeed = 80f;
-        [SerializeField][Tooltip("Friction to apply against movement on stick")] private float friction;
-
-        [Header("Options")]
-        [Tooltip("When false, the charcter will skip acceleration and deceleration and instantly move and stop")] public bool useAcceleration;
-        public bool itsTheIntro = true;
+        [Header("Components")]
+        MCController _MCController;
+        MCMovementData _movementData;
 
         [Header("Calculations")]
         public float directionX;
@@ -31,6 +20,13 @@ namespace TKM
         [Header("Current State")]
         public bool onGround;
         public bool pressingKey;
+
+        public MCMovement(MCController mCController, MCMovementData movementData)
+        {
+            _MCController = mCController;
+            _movementData = movementData;
+        }
+
         public void Enter()
         { }
         public void Update()
@@ -51,7 +47,7 @@ namespace TKM
 
             //Calculate's the character's desired velocity - which is the direction you are facing, multiplied by the character's maximum speed
             //Friction is not used in this game
-            desiredVelocity = new Vector2(directionX, 0f) * Mathf.Max(maxSpeed - friction, 0f);
+            desiredVelocity = new Vector2(directionX, 0f) * Mathf.Max(_movementData.maxSpeed - _movementData.friction, 0f);
 
         }
 
@@ -66,7 +62,7 @@ namespace TKM
             velocity = _MCController.Rigidbody.linearVelocity;
 
             //Calculate movement, depending on whether "Instant Movement" has been checked
-            if (useAcceleration)
+            if (_movementData.useAcceleration)
             {
                 runWithAcceleration();
             }
@@ -87,9 +83,9 @@ namespace TKM
         {
             //Set our acceleration, deceleration, and turn speed stats, based on whether we're on the ground on in the air
 
-            acceleration = onGround ? maxAcceleration : maxAirAcceleration;
-            deceleration = onGround ? maxDecceleration : maxAirDeceleration;
-            turnSpeed = onGround ? maxTurnSpeed : maxAirTurnSpeed;
+            acceleration = onGround ? _movementData.maxAcceleration : _movementData.maxAirAcceleration;
+            deceleration = onGround ? _movementData.maxDecceleration : _movementData.maxAirDeceleration;
+            turnSpeed = onGround ? _movementData.maxTurnSpeed : _movementData.maxAirTurnSpeed;
 
             if (pressingKey)
             {

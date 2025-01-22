@@ -119,77 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &27646377 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8692528765959736458, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
-  m_PrefabInstance: {fileID: 7705798332267190483}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &27646378 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7115430611667144160, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
-  m_PrefabInstance: {fileID: 7705798332267190483}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27646377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dec3fdf1fd0e8148ac69739a9f21161, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &27646384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27646377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d91b7645a470864a81f05d94813f482, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _MCController: {fileID: 27646378}
-  maxSpeed: 10
-  maxAcceleration: 52
-  maxDecceleration: 52
-  maxTurnSpeed: 80
-  maxAirAcceleration: 0
-  maxAirDeceleration: 0
-  maxAirTurnSpeed: 80
-  friction: 0
-  useAcceleration: 0
-  itsTheIntro: 1
-  directionX: 0
-  velocity: {x: 0, y: 0}
-  onGround: 0
-  pressingKey: 0
---- !u!114 &27646385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27646377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e6d52b342c88a4d9a47d43078979c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _MCController: {fileID: 27646378}
-  velocity: {x: 0, y: 0}
-  jumpHeight: 2
-  timeToJumpApex: 0.2
-  upwardMovementMultiplier: 1
-  downwardMovementMultiplier: 6.17
-  maxAirJumps: 0
-  variablejumpHeight: 0
-  jumpCutOff: 1
-  speedLimit: 0
-  coyoteTime: 0.15
-  jumpBuffer: 0.15
-  jumpSpeed: 0
-  gravMultiplier: 0
-  canJumpAgain: 0
-  onGround: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,11 +517,19 @@ PrefabInstance:
     - target: {fileID: 7115430611667144160, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
       propertyPath: MCJump
       value: 
-      objectReference: {fileID: 27646385}
+      objectReference: {fileID: 0}
+    - target: {fileID: 7115430611667144160, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
+      propertyPath: JumpData
+      value: 
+      objectReference: {fileID: 11400000, guid: 13c6d0d5d58894b44a321cf02cf32a1f, type: 2}
     - target: {fileID: 7115430611667144160, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
       propertyPath: MCMovement
       value: 
-      objectReference: {fileID: 27646384}
+      objectReference: {fileID: 0}
+    - target: {fileID: 7115430611667144160, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
+      propertyPath: MovementData
+      value: 
+      objectReference: {fileID: 11400000, guid: f083d5c5a49626140a70a3195f8c7acf, type: 2}
     - target: {fileID: 7424867750358741523, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -640,13 +577,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8692528765959736458, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 27646384}
-    - targetCorrespondingSourceObject: {fileID: 8692528765959736458, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 27646385}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39911f898f156a44aa78211ca915d0ed, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dc3a2e6c15a3d49a40d0be287ac635, type: 3}
-  m_Name: MCMovementData
+  m_Script: {fileID: 11500000, guid: f4ce4fa272941354d97a9359f7d48b87, type: 3}
+  m_Name: DefaultMovementData
   m_EditorClassIdentifier: 
   maxSpeed: 10
   maxAcceleration: 52
@@ -20,5 +20,5 @@ MonoBehaviour:
   maxAirDeceleration: 0
   maxAirTurnSpeed: 80
   friction: 0
-  useAcceleration: 1
+  useAcceleration: 0
   itsTheIntro: 1

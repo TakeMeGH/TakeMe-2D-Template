@@ -2,34 +2,17 @@ using UnityEngine;
 
 namespace TKM
 {
-    public class MCJump : MonoBehaviour, IState
+    public class MCJump : IState
     {
         [Header("Components")]
-        [SerializeField] MCController _MCController;
-        [HideInInspector] public Vector2 velocity;
-        [Header("Jumping Stats")]
-        [SerializeField, Range(2f, 5.5f)][Tooltip("Maximum jump height")] public float jumpHeight = 7.3f;
-
-        //If you're using your stats from Platformer Toolkit with this character controller, please note that the number on the Jump Duration handle does not match this stat
-        //It is re-scaled, from 0.2f - 1.25f, to 1 - 10.
-        //You can transform the number on screen to the stat here, using the function at the bottom of this script
-
-        [SerializeField, Range(0.2f, 1.25f)][Tooltip("How long it takes to reach that height before coming back down")] public float timeToJumpApex;
-        [SerializeField, Range(0f, 5f)][Tooltip("Gravity multiplier to apply when going up")] public float upwardMovementMultiplier = 1f;
-        [SerializeField, Range(1f, 10f)][Tooltip("Gravity multiplier to apply when coming down")] public float downwardMovementMultiplier = 6.17f;
-        [SerializeField, Range(0, 1)][Tooltip("How many times can you jump in the air?")] public int maxAirJumps = 0;
-
-        [Header("Options")]
-        [Tooltip("Should the character drop when you let go of jump?")] public bool variablejumpHeight;
-        [SerializeField, Range(1f, 10f)][Tooltip("Gravity multiplier when you let go of jump")] public float jumpCutOff;
-        [SerializeField][Tooltip("The fastest speed the character can fall")] public float speedLimit;
-        [SerializeField, Range(0f, 0.3f)][Tooltip("How long should coyote time last?")] public float coyoteTime = 0.15f;
-        [SerializeField, Range(0f, 0.3f)][Tooltip("How far from ground should we cache your jump?")] public float jumpBuffer = 0.15f;
-
+        MCController _MCController;
+        MCJumpData _jumpData;
         [Header("Calculations")]
         public float jumpSpeed;
         private float defaultGravityScale = 1f;
         public float gravMultiplier = 1f;
+        [HideInInspector] public Vector2 velocity;
+
 
         [Header("Current State")]
         public bool canJumpAgain = false;
@@ -40,33 +23,17 @@ namespace TKM
         public bool onGround;
         private bool currentlyJumping;
 
-        public MCJump(MCController mCController)
+        public MCJump(MCController mCController, MCJumpData jumpData)
         {
             _MCController = mCController;
+            _jumpData = jumpData;
         }
-
-        void OnEnable()
-        {
-            _MCController.InputReader.JumpStarted += OnJumpStarted;
-            _MCController.InputReader.JumpCanceled += OnJumpCanceled;
-        }
-
-        void OnDisable()
-        {
-            _MCController.InputReader.JumpStarted -= OnJumpStarted;
-            _MCController.InputReader.JumpCanceled -= OnJumpCanceled;
-
-        }
-
-        void Start()
-        {
-
-        }
-
         public void Enter()
         {
             //Find the character's Rigidbody and ground detection and juice scripts
             defaultGravityScale = 1f;
+            _MCController.InputReader.JumpStarted += OnJumpStarted;
+            _MCController.InputReader.JumpCanceled += OnJumpCanceled;
         }
 
         public void OnJumpStarted()
@@ -89,7 +56,7 @@ namespace TKM
             onGround = _MCController.GroundDetector.GetOnGround();
 
             //Jump buffer allows us to queue up a jump, which will play when we next hit the ground
-            if (jumpBuffer > 0)
+            if (_jumpData.jumpBuffer > 0)
             {
                 //Instead of immediately turning off "desireJump", start counting up...
                 //All the while, the DoAJump function will repeatedly be fired off
@@ -97,7 +64,7 @@ namespace TKM
                 {
                     jumpBufferCounter += Time.deltaTime;
 
-                    if (jumpBufferCounter > jumpBuffer)
+                    if (jumpBufferCounter > _jumpData.jumpBuffer)
                     {
                         //If time exceeds the jump buffer, turn off "desireJump"
                         desiredJump = false;
@@ -122,8 +89,9 @@ namespace TKM
         private void setPhysics()
         {
             //Determine the character's gravity scale, using the stats provided. Multiply it by a gravMultiplier, used later
-            Vector2 newGravity = new Vector2(0, (-2 * jumpHeight) / (timeToJumpApex * timeToJumpApex));
-            _MCController.Rigidbody.gravityScale = (newGravity.y / Physics2D.gravity.y) * gravMultiplier;
+            Vector2 newGravity = new Vector2(0, -2 * _jumpData.jumpHeight / (_jumpData.timeToJumpApex * _jumpData.timeToJumpApex));
+            Debug.Log(newGravity.y + " " + Physics2D.gravity.y + " " + gravMultiplier);
+            _MCController.Rigidbody.gravityScale = newGravity.y / Physics2D.gravity.y * gravMultiplier;
         }
 
         public void PhysicsUpdate()
@@ -160,22 +128,22 @@ namespace TKM
                 else
                 {
                     //If we're using variable jump height...)
-                    if (variablejumpHeight)
+                    if (_jumpData.variablejumpHeight)
                     {
                         //Apply upward multiplier if player is rising and holding jump
                         if (pressingJump && currentlyJumping)
                         {
-                            gravMultiplier = upwardMovementMultiplier;
+                            gravMultiplier = _jumpData.upwardMovementMultiplier;
                         }
                         //But apply a special downward multiplier if the player lets go of jump
                         else
                         {
-                            gravMultiplier = jumpCutOff;
+                            gravMultiplier = _jumpData.jumpCutOff;
                         }
                     }
                     else
                     {
-                        gravMultiplier = upwardMovementMultiplier;
+                        gravMultiplier = _jumpData.upwardMovementMultiplier;
                     }
                 }
             }
@@ -192,7 +160,7 @@ namespace TKM
                 else
                 {
                     //Otherwise, apply the downward gravity multiplier as Kit comes back to Earth
-                    gravMultiplier = downwardMovementMultiplier;
+                    gravMultiplier = _jumpData.downwardMovementMultiplier;
                 }
 
             }
@@ -209,24 +177,24 @@ namespace TKM
 
             //Set the character's Rigidbody's velocity
             //But clamp the Y variable within the bounds of the speed limit, for the terminal velocity assist option
-            _MCController.Rigidbody.linearVelocity = new Vector3(velocity.x, Mathf.Clamp(velocity.y, -speedLimit, 100));
+            _MCController.Rigidbody.linearVelocity = new Vector3(velocity.x, Mathf.Clamp(velocity.y, -_jumpData.speedLimit, 100));
         }
 
         private void DoAJump()
         {
 
             //Create the jump, provided we are on the ground, in coyote time, or have a double jump available
-            if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < coyoteTime) || canJumpAgain)
+            if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < _jumpData.coyoteTime) || canJumpAgain)
             {
                 desiredJump = false;
                 jumpBufferCounter = 0;
                 coyoteTimeCounter = 0;
 
                 //If we have double jump on, allow us to jump again (but only once)
-                canJumpAgain = (maxAirJumps == 1 && canJumpAgain == false);
+                canJumpAgain = _jumpData.maxAirJumps == 1 && canJumpAgain == false;
 
                 //Determine the power of the jump, based on our gravity and stats
-                jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * _MCController.Rigidbody.gravityScale * jumpHeight);
+                jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * _MCController.Rigidbody.gravityScale * _jumpData.jumpHeight);
 
                 //If Kit is moving up or down when she jumps (such as when doing a double jump), change the jumpSpeed;
                 //This will ensure the jump is the exact same strength, no matter your velocity.
@@ -245,13 +213,16 @@ namespace TKM
 
             }
 
-            if (jumpBuffer == 0)
+            if (_jumpData.jumpBuffer == 0)
             {
                 //If we don't have a jump buffer, then turn off desiredJump immediately after hitting jumping
                 desiredJump = false;
             }
         }
         public void Exit()
-        { }
+        {
+            _MCController.InputReader.JumpStarted -= OnJumpStarted;
+            _MCController.InputReader.JumpCanceled -= OnJumpCanceled;
+        }
     }
 }
