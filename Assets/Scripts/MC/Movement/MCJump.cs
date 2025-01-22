@@ -22,6 +22,8 @@ namespace TKM
         private bool pressingJump;
         public bool onGround;
         private bool currentlyJumping;
+        private Vector2 groundGravity;
+
 
         public MCJump(MCController mCController, MCJumpData jumpData)
         {
@@ -32,6 +34,8 @@ namespace TKM
         {
             //Find the character's Rigidbody and ground detection and juice scripts
             defaultGravityScale = 1f;
+            groundGravity = new Vector2(0, -2 * _jumpData.jumpHeight / (_jumpData.timeToJumpApex * _jumpData.timeToJumpApex));
+
             _MCController.InputReader.JumpStarted += OnJumpStarted;
             _MCController.InputReader.JumpCanceled += OnJumpCanceled;
         }
@@ -89,9 +93,8 @@ namespace TKM
         private void setPhysics()
         {
             //Determine the character's gravity scale, using the stats provided. Multiply it by a gravMultiplier, used later
-            Vector2 newGravity = new Vector2(0, -2 * _jumpData.jumpHeight / (_jumpData.timeToJumpApex * _jumpData.timeToJumpApex));
-            Debug.Log(newGravity.y + " " + Physics2D.gravity.y + " " + gravMultiplier);
-            _MCController.Rigidbody.gravityScale = newGravity.y / Physics2D.gravity.y * gravMultiplier;
+            // ( Ground Gravity ) * ( Gravity Multiplier).  
+            _MCController.Rigidbody.gravityScale = (groundGravity.y / Physics2D.gravity.y) * gravMultiplier;
         }
 
         public void PhysicsUpdate()
@@ -100,9 +103,8 @@ namespace TKM
             velocity = _MCController.Rigidbody.linearVelocity;
 
             //Keep trying to do a jump, for as long as desiredJump is true
-            if (desiredJump)
+            if (desiredJump && DoAJump())
             {
-                DoAJump();
                 _MCController.Rigidbody.linearVelocity = velocity;
 
                 //Skip gravity calculations this frame, so currentlyJumping doesn't turn off
@@ -180,12 +182,14 @@ namespace TKM
             _MCController.Rigidbody.linearVelocity = new Vector3(velocity.x, Mathf.Clamp(velocity.y, -_jumpData.speedLimit, 100));
         }
 
-        private void DoAJump()
+        private bool DoAJump()
         {
-
+            bool isNewvelocityCalculated = false;
             //Create the jump, provided we are on the ground, in coyote time, or have a double jump available
             if (onGround || (coyoteTimeCounter > 0.03f && coyoteTimeCounter < _jumpData.coyoteTime) || canJumpAgain)
             {
+                isNewvelocityCalculated = true;
+
                 desiredJump = false;
                 jumpBufferCounter = 0;
                 coyoteTimeCounter = 0;
@@ -194,7 +198,7 @@ namespace TKM
                 canJumpAgain = _jumpData.maxAirJumps == 1 && canJumpAgain == false;
 
                 //Determine the power of the jump, based on our gravity and stats
-                jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * _MCController.Rigidbody.gravityScale * _jumpData.jumpHeight);
+                jumpSpeed = Mathf.Sqrt(-2f * Physics2D.gravity.y * (groundGravity.y / Physics2D.gravity.y) * _jumpData.jumpHeight);
 
                 //If Kit is moving up or down when she jumps (such as when doing a double jump), change the jumpSpeed;
                 //This will ensure the jump is the exact same strength, no matter your velocity.
@@ -212,12 +216,12 @@ namespace TKM
                 currentlyJumping = true;
 
             }
-
             if (_jumpData.jumpBuffer == 0)
             {
                 //If we don't have a jump buffer, then turn off desiredJump immediately after hitting jumping
                 desiredJump = false;
             }
+            return isNewvelocityCalculated;
         }
         public void Exit()
         {
