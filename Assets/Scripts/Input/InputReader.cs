@@ -10,6 +10,7 @@ namespace TKM
         public Action<Vector2> MoveEvent;
         public Action JumpStarted;
         public Action JumpCanceled;
+        public Action InteractPerformed;
 
 
         MCInput _MCInput;
@@ -60,6 +61,14 @@ namespace TKM
             else if (context.phase == InputActionPhase.Canceled)
             {
                 JumpCanceled?.Invoke();
+            }
+        }
+
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                InteractPerformed?.Invoke();
             }
         }
     }
