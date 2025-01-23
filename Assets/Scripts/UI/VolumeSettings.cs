@@ -16,14 +16,13 @@ namespace TKM
         const string BGM_VOLUME = "BGMVolume";
         const float MULTIPILER = 20;
 
+        // TODO: Kayaknya masih bisa ada bug ketika playprefs belom ada sama sekali
         public void Setup()
         {
             if (PlayerPrefs.HasKey(MASTER_VOLUME))
             {
                 LoadVolume();
             }
-
-            Debug.Log("SETUP");
 
             SetMasterVolume();
             SetSFXVolume();
