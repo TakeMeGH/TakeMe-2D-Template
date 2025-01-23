@@ -7,10 +7,17 @@ namespace TKM
     [CreateAssetMenu(fileName = "InputReader", menuName = "Scriptable Objects/InputReader")]
     public class InputReader : ScriptableObject, MCInput.IGameplayActions, MCInput.IUIActions
     {
+        #region Gameplay
         public Action<Vector2> MoveEvent;
         public Action JumpStarted;
         public Action JumpCanceled;
         public Action InteractPerformed;
+        public Action PausePerformed;
+        #endregion
+
+        #region UI
+        public Action UnPausePerformed;
+        #endregion
 
 
         MCInput _MCInput;
@@ -52,6 +59,7 @@ namespace TKM
             Cursor.visible = true;
         }
 
+        #region Gameplay
         public void OnJump(InputAction.CallbackContext context)
         {
             if (context.phase == InputActionPhase.Started)
@@ -71,5 +79,27 @@ namespace TKM
                 InteractPerformed?.Invoke();
             }
         }
+
+        public void OnPause(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                PausePerformed?.Invoke();
+            }
+        }
+
+        #endregion
+
+        #region UI
+
+        public void OnUnPause(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Performed)
+            {
+                UnPausePerformed?.Invoke();
+            }
+        }
+
+        #endregion
     }
 }
